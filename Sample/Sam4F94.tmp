@@ -1,0 +1,25 @@
+[gd_scene load_steps=6 format=3 uid="uid://dwq1khalcaag"]
+
+[ext_resource type="Script" path="res://addons/finite_state_machine/features/state_manager/state_manager.gd" id="1_luwg4"]
+[ext_resource type="Script" path="res://addons/finite_state_machine/features/state/state.gd" id="2_3ckyy"]
+
+[sub_resource type="Resource" id="Resource_4wmrw"]
+script = ExtResource("2_3ckyy")
+name = ""
+tags = Array[String]([])
+
+[sub_resource type="Resource" id="Resource_2lqw5"]
+script = ExtResource("2_3ckyy")
+name = ""
+tags = Array[String]([])
+
+[sub_resource type="Resource" id="Resource_egww0"]
+script = ExtResource("2_3ckyy")
+name = ""
+tags = Array[String]([])
+
+[node name="SampleScene" type="Node2D"]
+
+[node name="Finite State Machine" type="Node" parent="."]
+script = ExtResource("1_luwg4")
+available_states = Array[ExtResource("2_3ckyy")]([SubResource("Resource_4wmrw"), SubResource("Resource_2lqw5"), SubResource("Resource_egww0")])

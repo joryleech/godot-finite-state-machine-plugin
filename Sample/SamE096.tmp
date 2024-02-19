@@ -1,0 +1,171 @@
+[gd_scene load_steps=17 format=3 uid="uid://dwq1khalcaag"]
+
+[ext_resource type="Script" path="res://addons/finite_state_machine/features/state_manager/state_manager.gd" id="1_luwg4"]
+[ext_resource type="Script" path="res://addons/finite_state_machine/features/state/state.gd" id="2_3ckyy"]
+[ext_resource type="Script" path="res://addons/finite_state_machine/features/state_transition_trigger/state_transition_trigger.gd" id="3_toqls"]
+[ext_resource type="Script" path="res://addons/finite_state_machine/features/state_transition_trigger/conditions/FloatCondition.gd" id="3_vlw2d"]
+[ext_resource type="Script" path="res://Sample/DemoUIScript.gd" id="5_l4xp2"]
+
+[sub_resource type="Resource" id="Resource_4ygvj"]
+script = ExtResource("2_3ckyy")
+name = "Idle"
+tags = Array[String](["Isnt Doing anything", "For Real Isnt"])
+
+[sub_resource type="Resource" id="Resource_qkyks"]
+script = ExtResource("2_3ckyy")
+name = "Walk"
+tags = Array[String](["Left foot", "Then right foot", "Can jump from here"])
+
+[sub_resource type="Resource" id="Resource_027hg"]
+script = ExtResource("2_3ckyy")
+name = "Jump"
+tags = Array[String](["Is Jumping", "He's Doing Great"])
+
+[sub_resource type="Resource" id="Resource_l47xr"]
+script = ExtResource("3_vlw2d")
+condition_type = 1
+key = "walk_magnitude"
+value = 0.2
+
+[sub_resource type="Resource" id="Resource_os8d7"]
+script = ExtResource("3_toqls")
+name = "Idle To Walk"
+starting_state = SubResource("Resource_4ygvj")
+ending_state = SubResource("Resource_027hg")
+conditions = Array[Resource("res://addons/finite_state_machine/features/state_transition_trigger/Condition.gd")]([SubResource("Resource_l47xr")])
+
+[sub_resource type="Resource" id="Resource_3kawl"]
+script = ExtResource("3_vlw2d")
+condition_type = 1
+key = "jump_time"
+value = 0.0
+
+[sub_resource type="Resource" id="Resource_3v5sl"]
+script = ExtResource("3_toqls")
+name = "Idle To Jump"
+starting_state = SubResource("Resource_4ygvj")
+ending_state = SubResource("Resource_027hg")
+conditions = Array[Resource("res://addons/finite_state_machine/features/state_transition_trigger/Condition.gd")]([SubResource("Resource_3kawl")])
+
+[sub_resource type="Resource" id="Resource_44yui"]
+script = ExtResource("3_vlw2d")
+condition_type = 4
+key = "walk_magnitude"
+value = 0.2
+
+[sub_resource type="Resource" id="Resource_6tnhy"]
+script = ExtResource("3_toqls")
+name = "Walk to Idle"
+starting_state = SubResource("Resource_qkyks")
+ending_state = SubResource("Resource_4ygvj")
+conditions = Array[Resource("res://addons/finite_state_machine/features/state_transition_trigger/Condition.gd")]([SubResource("Resource_44yui")])
+
+[sub_resource type="Resource" id="Resource_7ftpw"]
+script = ExtResource("3_toqls")
+name = "Jump to Idle"
+starting_state = SubResource("Resource_027hg")
+ending_state = SubResource("Resource_4ygvj")
+conditions = Array[Resource("res://addons/finite_state_machine/features/state_transition_trigger/Condition.gd")]([])
+
+[sub_resource type="Resource" id="Resource_iqqgd"]
+script = ExtResource("3_toqls")
+name = "Walk to Jump"
+starting_state = SubResource("Resource_qkyks")
+ending_state = SubResource("Resource_027hg")
+conditions = Array[Resource("res://addons/finite_state_machine/features/state_transition_trigger/Condition.gd")]([])
+
+[node name="SampleScene" type="Node2D"]
+
+[node name="Finite State Machine" type="Node" parent="."]
+script = ExtResource("1_luwg4")
+available_states = Array[ExtResource("2_3ckyy")]([SubResource("Resource_4ygvj"), SubResource("Resource_qkyks"), SubResource("Resource_027hg")])
+state_transition_triggers = Array[ExtResource("3_toqls")]([SubResource("Resource_os8d7"), SubResource("Resource_3v5sl"), SubResource("Resource_6tnhy"), SubResource("Resource_7ftpw"), SubResource("Resource_iqqgd")])
+
+[node name="Control" type="Control" parent="." node_paths=PackedStringArray("state_machine")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1150.0
+offset_bottom = 646.0
+script = ExtResource("5_l4xp2")
+state_machine = NodePath("../Finite State Machine")
+
+[node name="Panel" type="Panel" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 295.0
+offset_right = -280.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Control/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 62.0
+offset_top = 25.0
+offset_right = -35.0
+offset_bottom = -598.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Current State: "
+
+[node name="State Label" type="RichTextLabel" parent="Control/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 66.0
+offset_top = 53.0
+offset_right = -31.0
+offset_bottom = -501.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/normal_font_size = 61
+text = "Current State: "
+
+[node name="Tags Header" type="RichTextLabel" parent="Control/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 53.0
+offset_top = 585.0
+offset_right = -44.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "KB+M Use Arrow Keys and Space
+Controller: Use joystick and A Button"
+
+[node name="Tags Label" type="RichTextLabel" parent="Control/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 66.0
+offset_top = 212.0
+offset_right = -31.0
+offset_bottom = -125.0
+grow_horizontal = 2
+grow_vertical = 2
+bbcode_enabled = true
+text = "* TAGS GO HERE"
+
+[node name="Tags Label2" type="RichTextLabel" parent="Control/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 66.0
+offset_top = 212.0
+offset_right = -31.0
+offset_bottom = -125.0
+grow_horizontal = 2
+grow_vertical = 2
+bbcode_enabled = true
+text = "* TAGS GO HERE"
+
+[connection signal="state_changed" from="Finite State Machine" to="Control" method="_on_finite_state_machine_state_changed"]

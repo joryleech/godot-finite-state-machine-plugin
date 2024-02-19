@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3 uid="uid://dwq1khalcaag"]
+
+[ext_resource type="Script" path="res://addons/finite_state_machine/features/state_manager/state_manager.gd" id="1_luwg4"]
+[ext_resource type="Script" path="res://addons/finite_state_machine/features/state/state.gd" id="2_3ckyy"]
+
+[sub_resource type="Resource" id="Resource_4ygvj"]
+script = ExtResource("2_3ckyy")
+name = "State 1"
+tags = Array[String](["has_button_2", "has_button_3", "has_button_4"])
+
+[node name="SampleScene" type="Node2D"]
+
+[node name="Finite State Machine" type="Node" parent="."]
+script = ExtResource("1_luwg4")
+available_states = Array[ExtResource("2_3ckyy")]([SubResource("Resource_4ygvj")])
+state_transition_triggers = Array[Resource("res://addons/finite_state_machine/features/state_transition_trigger/state_transition_trigger.gd")]([null])
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1150.0
+offset_bottom = 646.0
+
+[node name="Panel" type="Panel" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.5
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

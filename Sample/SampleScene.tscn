@@ -1,0 +1,187 @@
+[gd_scene load_steps=22 format=3 uid="uid://dwq1khalcaag"]
+
+[ext_resource type="Script" path="res://addons/finite_state_machine/features/state_manager/state_manager.gd" id="1_luwg4"]
+[ext_resource type="Script" path="res://Sample/CharacterBody2D.gd" id="1_ybcg6"]
+[ext_resource type="Script" path="res://addons/finite_state_machine/features/state/state.gd" id="2_3ckyy"]
+[ext_resource type="Texture2D" uid="uid://cxogkwvvjusuf" path="res://icon.svg" id="2_7u87r"]
+[ext_resource type="Script" path="res://addons/finite_state_machine/features/state_transition_trigger/StateTransitionTrigger.gd" id="3_toqls"]
+[ext_resource type="Script" path="res://addons/finite_state_machine/features/state_transition_trigger/conditions/FloatCondition.gd" id="3_vlw2d"]
+[ext_resource type="Script" path="res://Sample/DemoUIScript.gd" id="5_l4xp2"]
+
+[sub_resource type="Resource" id="Resource_4ygvj"]
+script = ExtResource("2_3ckyy")
+name = "Idle"
+tags = Array[String](["Isnt Doing anything", "For Real Isnt"])
+
+[sub_resource type="Resource" id="Resource_qkyks"]
+script = ExtResource("2_3ckyy")
+name = "Walk"
+tags = Array[String](["Left foot", "Then right foot", "Can jump from here"])
+
+[sub_resource type="Resource" id="Resource_027hg"]
+script = ExtResource("2_3ckyy")
+name = "Jump"
+tags = Array[String](["Is Jumping", "He's Doing Great"])
+
+[sub_resource type="Resource" id="Resource_l47xr"]
+script = ExtResource("3_vlw2d")
+condition_type = 1
+key = "walk_magnitude"
+value = 0.2
+
+[sub_resource type="Resource" id="Resource_os8d7"]
+script = ExtResource("3_toqls")
+name = "Idle To Walk"
+starting_state = SubResource("Resource_4ygvj")
+ending_state = SubResource("Resource_qkyks")
+conditions = Array[Resource("res://addons/finite_state_machine/features/state_transition_trigger/Condition.gd")]([SubResource("Resource_l47xr")])
+
+[sub_resource type="Resource" id="Resource_3kawl"]
+script = ExtResource("3_vlw2d")
+condition_type = 1
+key = "jump_time"
+value = 0.0
+
+[sub_resource type="Resource" id="Resource_3v5sl"]
+script = ExtResource("3_toqls")
+name = "Idle To Jump"
+starting_state = SubResource("Resource_4ygvj")
+ending_state = SubResource("Resource_027hg")
+conditions = Array[Resource("res://addons/finite_state_machine/features/state_transition_trigger/Condition.gd")]([SubResource("Resource_3kawl")])
+
+[sub_resource type="Resource" id="Resource_44yui"]
+script = ExtResource("3_vlw2d")
+condition_type = 2
+key = "walk_magnitude"
+value = 0.2
+
+[sub_resource type="Resource" id="Resource_6tnhy"]
+script = ExtResource("3_toqls")
+name = "Walk to Idle"
+starting_state = SubResource("Resource_qkyks")
+ending_state = SubResource("Resource_4ygvj")
+conditions = Array[Resource("res://addons/finite_state_machine/features/state_transition_trigger/Condition.gd")]([SubResource("Resource_44yui")])
+
+[sub_resource type="Resource" id="Resource_wdot6"]
+script = ExtResource("3_vlw2d")
+condition_type = 4
+key = "jump_time"
+value = 0.0
+
+[sub_resource type="Resource" id="Resource_7ftpw"]
+script = ExtResource("3_toqls")
+name = "Jump to Idle"
+starting_state = SubResource("Resource_027hg")
+ending_state = SubResource("Resource_4ygvj")
+conditions = Array[Resource("res://addons/finite_state_machine/features/state_transition_trigger/Condition.gd")]([SubResource("Resource_wdot6")])
+
+[sub_resource type="Resource" id="Resource_6nhqp"]
+script = ExtResource("3_vlw2d")
+condition_type = 1
+key = "jump_time"
+value = 0.0
+
+[sub_resource type="Resource" id="Resource_iqqgd"]
+script = ExtResource("3_toqls")
+name = "Walk to Jump"
+starting_state = SubResource("Resource_qkyks")
+ending_state = SubResource("Resource_027hg")
+conditions = Array[Resource("res://addons/finite_state_machine/features/state_transition_trigger/Condition.gd")]([SubResource("Resource_6nhqp")])
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_jnxeq"]
+
+[node name="SampleScene" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(-14, 20)
+
+[node name="Polygon2D" type="Polygon2D" parent="StaticBody2D"]
+polygon = PackedVector2Array(246, 304, -30, 257, -188, 308, -218, 465, -31, 547, 472, 582, 1334, 564, 1353, 247, 1075, 316, 677, 335, 355, 309)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
+polygon = PackedVector2Array(246, 304, -30, 257, -188, 308, -218, 465, -31, 547, 472, 582, 1334, 564, 1353, 247, 1075, 316, 677, 335, 355, 309)
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+position = Vector2(107, 116)
+script = ExtResource("1_ybcg6")
+
+[node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
+position = Vector2(-9.53674e-07, -3)
+scale = Vector2(0.167969, 0.320312)
+texture = ExtResource("2_7u87r")
+
+[node name="Finite State Machine" type="Node" parent="CharacterBody2D"]
+script = ExtResource("1_luwg4")
+current_state = SubResource("Resource_4ygvj")
+available_states = Array[ExtResource("2_3ckyy")]([SubResource("Resource_4ygvj"), SubResource("Resource_qkyks"), SubResource("Resource_027hg")])
+check_state_transition_type = 0
+state_transition_triggers = Array[ExtResource("3_toqls")]([SubResource("Resource_os8d7"), SubResource("Resource_3v5sl"), SubResource("Resource_6tnhy"), SubResource("Resource_7ftpw"), SubResource("Resource_iqqgd")])
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+shape = SubResource("CapsuleShape2D_jnxeq")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Panel" parent="CanvasLayer" node_paths=PackedStringArray("state_machine")]
+custom_minimum_size = Vector2(53.765, 60.465)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+script = ExtResource("5_l4xp2")
+state_machine = NodePath("../../CharacterBody2D/Finite State Machine")
+
+[node name="Panel" type="Panel" parent="CanvasLayer/Control"]
+layout_mode = 2
+anchor_left = 0.507
+anchor_right = 0.507
+anchor_bottom = 1.0
+offset_left = -289.064
+offset_right = 287.936
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/Control/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/Panel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Control/Panel/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "Current State: "
+fit_content = true
+
+[node name="State Label" type="RichTextLabel" parent="CanvasLayer/Control/Panel/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 61
+text = "Current State: "
+fit_content = true
+
+[node name="Tags Label" type="RichTextLabel" parent="CanvasLayer/Control/Panel/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "* TAGS GO HERE"
+fit_content = true
+
+[node name="Tags Label2" type="RichTextLabel" parent="CanvasLayer/Control/Panel/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "* TAGS GO HERE"
+fit_content = true
+
+[node name="Tags Header" type="RichTextLabel" parent="CanvasLayer/Control/Panel/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "KB+M Use Arrow Keys and Space
+Controller: Use joystick and A Button"
+fit_content = true
+
+[connection signal="state_changed" from="CharacterBody2D/Finite State Machine" to="CanvasLayer/Control" method="_on_finite_state_machine_state_changed"]
