@@ -1,8 +1,7 @@
-class_name StateTransitionTrigger
 extends Resource
 @export var name : String
-@export var starting_state : State
-@export var ending_state : State
+@export var starting_state : FiniteStateMachine.State
+@export var ending_state : FiniteStateMachine.State
 
 @export var conditions : Array[Condition]
 

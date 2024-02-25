@@ -72,7 +72,6 @@ Each can be used to check several logical operations on the state of the FiniteS
 
 ## TODO List
 **Plugin**
-* Small refactor to prevent polluting the global namespace.
 * Better Icons.
 * Less confusing documentation?
 

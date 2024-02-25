@@ -18,6 +18,5 @@ func render_state(state):
 	state_label.text = state.name
 	
 func _on_finite_state_machine_state_changed(current_state):
-	print(current_state)
 	render_state(current_state)
 	pass # Replace with function body.

@@ -1,4 +1,3 @@
-class_name State
 extends Resource
 @export var name : String
 @export var tags : Array[String]

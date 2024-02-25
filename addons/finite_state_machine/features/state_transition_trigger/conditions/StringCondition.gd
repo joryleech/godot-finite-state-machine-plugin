@@ -1,4 +1,3 @@
-class_name StringCondition
 extends Condition
 enum StringConditionType {
 	equals,

@@ -1,4 +1,3 @@
-class_name FloatCondition
 extends Condition
 enum FloatConditionType {
 	equal_to,

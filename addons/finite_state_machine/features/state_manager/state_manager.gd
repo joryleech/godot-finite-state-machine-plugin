@@ -1,8 +1,8 @@
 extends Node
 
-@export var current_state : State
+@export var current_state : FiniteStateMachine.State
 #TODO conver to dictionary
-@export var available_states : Array[State] = []
+@export var available_states : Array[FiniteStateMachine.State] = []
 @export var allow_new_states : bool = false
 
 signal state_changed
@@ -18,7 +18,7 @@ enum StateTransitionCheckType {
 	disabled
 }
 @export var check_state_transition_type : StateTransitionCheckType = StateTransitionCheckType.disabled
-@export var state_transition_triggers : Array[StateTransitionTrigger]
+@export var state_transition_triggers : Array[FiniteStateMachine.StateTransitionTrigger]
 
 
 
@@ -26,14 +26,14 @@ enum StateTransitionCheckType {
 func set_check_state_type(new_type : StateTransitionCheckType):
 	check_state_transition_type = new_type
 	
-func get_current_state() -> State:
+func get_current_state() -> FiniteStateMachine.State:
 	return current_state
 	
 func call_current_state(method : String, params = {}):
 	if(current_state):
 		current_state.call(method, params)
 	
-func _set_state(new_state : State):
+func _set_state(new_state : FiniteStateMachine.State):
 	if(current_state):
 		current_state.on_exit()
 		emit_signal("state_exited", current_state)
@@ -56,8 +56,8 @@ func _physics_process(delta):
 		current_state.update(delta)
 		
 func process_state_transition_triggers():
-	var current_states_triggers : Array[StateTransitionTrigger] = state_transition_triggers.filter(func(trigger : StateTransitionTrigger): return trigger.starting_state == current_state)
-	for trigger : StateTransitionTrigger in current_states_triggers:
+	var current_states_triggers : Array[FiniteStateMachine.StateTransitionTrigger] = state_transition_triggers.filter(func(trigger : FiniteStateMachine.StateTransitionTrigger): return trigger.starting_state == current_state)
+	for trigger : FiniteStateMachine.StateTransitionTrigger in current_states_triggers:
 		if(trigger.check_active(state_variables)):
 			set_state_by_state(trigger.ending_state)
 			return
@@ -67,11 +67,11 @@ func set_state_by_index(index : int):
 	_set_state(available_states[index])
 
 func set_state_by_name(name : String):
-	var filtered_states = available_states.filter(func(state : State): return state.name == "name")
+	var filtered_states = available_states.filter(func(state : FiniteStateMachine.State): return state.name == "name")
 	assert(filtered_states >= 1, "State name not found in available states")
 	_set_state(filtered_states[0])
 
-func set_state_by_state(state : State):
+func set_state_by_state(state : FiniteStateMachine.State):
 	if(available_states.has(state)):
 		_set_state(state)
 	elif(allow_new_states):
@@ -80,7 +80,7 @@ func set_state_by_state(state : State):
 	else:
 		_set_state(null)
 
-func set_state_dangerously(state : State):
+func set_state_dangerously(state : FiniteStateMachine.State):
 	_set_state(state)
 	
 #################################

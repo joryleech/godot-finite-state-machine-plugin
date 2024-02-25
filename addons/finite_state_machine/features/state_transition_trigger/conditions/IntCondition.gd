@@ -1,4 +1,3 @@
-class_name IntCondition
 extends Condition
 enum IntConditionType {
 	equal_to,
