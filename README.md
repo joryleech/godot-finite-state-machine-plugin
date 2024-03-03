@@ -1,4 +1,6 @@
-
+# Notice: Please use [gd-YAFSM](https://github.com/imjp94/gd-YAFSM) instead
+This was made to solve some problems in my project from scratch.
+after some research it looks like gd-YAFSM has all of the same concessions and an actual drag and drop editing interface, as opposed to the resource management in this project.
 
 # Godot Finite State Machine Plugin
 A plugin that allows the creation of a generalized Finite State Machine nodes, controlled by resources. 
